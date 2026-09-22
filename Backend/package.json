@@ -1,5 +1,5 @@
 {
-  "name": "Backend Storage System",
+  "name": "NuvemBox",
   "version": "1.0.0",
   "description": "A backend storage system for the Google Drive-like application",
   "main": "index.ts",
