@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm"
-import { Usuario } from "./Usuario.js"
+import { Usuario } from "./usuario.js"
 
 @Entity()
 export class Arquivo {
