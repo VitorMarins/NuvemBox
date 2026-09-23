@@ -17,15 +17,15 @@ export class Usuario {
     senha: string
 
     @Column({ type: "boolean" })
-    estaAtivo: boolean
+    esta_ativo: boolean
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-    dataCriacao: Date
-
-    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-    dataAtualizacao: Date
+    data_criacao: Date
+    
+    @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    data_atualizacao: Date
 
     @OneToMany(() => Arquivo, (arquivo) => arquivo.usuario)
-    arquivos: Arquivo[]
+    arquivos: Relation<Arquivo>[]
 
 }
