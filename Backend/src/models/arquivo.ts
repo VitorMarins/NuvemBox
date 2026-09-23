@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from "typeorm"
 import { Usuario } from "./usuario.js"
+import { Backup } from "./backup.js"
 
 @Entity()
 export class Arquivo {
@@ -31,5 +32,8 @@ export class Arquivo {
     @ManyToOne(() => Usuario, (usuario) => usuario.arquivos, { nullable: true, onDelete: "SET NULL" })
     @JoinColumn({ name: "usuario_id" })
     usuario: Usuario | null
+
+    @OneToMany(() => Backup, (backup) => backup.arquivo)
+    backups: Backup[]
 
 }
