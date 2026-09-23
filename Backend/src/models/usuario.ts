@@ -16,14 +16,14 @@ export class Usuario {
     @Column({ type: "varchar", length: 30 })
     senha: string
 
-    @Column({ name: "esta_ativo", type: "boolean" })
-    estaAtivo: boolean
+    @Column({ type: "boolean" })
+    esta_ativo: boolean
 
-    @Column({ name: "data_criacao", type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-    dataCriacao: Date
+    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    data_criacao: Date
     
-    @Column({ name: "data_atualizacao", type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-    dataAtualizacao: Date
+    @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    data_atualizacao: Date
 
     @OneToMany(() => Arquivo, (arquivo) => arquivo.usuario)
     arquivos: Relation<Arquivo>[]
