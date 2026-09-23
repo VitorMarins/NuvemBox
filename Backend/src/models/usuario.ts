@@ -26,6 +26,6 @@ export class Usuario {
     dataAtualizacao: Date
 
     @OneToMany(() => Arquivo, (arquivo) => arquivo.usuario)
-    arquivos: Arquivo[]
+    arquivos: Relation<Arquivo>[]
 
 }
