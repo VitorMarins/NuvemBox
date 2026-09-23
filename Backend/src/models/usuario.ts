@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, type Relation } from "typeorm"
 import { Arquivo } from "./arquivo.js"
 
 @Entity()
