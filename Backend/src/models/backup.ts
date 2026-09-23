@@ -10,7 +10,7 @@ export class Backup {
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     criado_em: Date
 
-    @ManyToOne(() => Arquivo, (arquivo) => arquivo.backups, { onDelete: "CASCADE" })
+    @ManyToOne(() => Arquivo, (arquivo) => arquivo.backups, { nullable: false, onDelete: "CASCADE" })
     @JoinColumn({ name: "arquivo_id" })
     arquivo: Arquivo
 
