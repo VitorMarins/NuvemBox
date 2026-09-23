@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm"
+import type { Relation } from "typeorm"
 import { Usuario } from "./usuario.js"
-import { Arquivo } from "./arquivo.js"
+import type { Arquivo } from "./arquivo.js"
 
 @Entity()
 export class Backup {
@@ -10,8 +11,8 @@ export class Backup {
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     criado_em: Date
 
-    @ManyToOne(() => Arquivo, (arquivo) => arquivo.backups, { nullable: false, onDelete: "CASCADE" })
+    @ManyToOne("Arquivo", (arquivo: Arquivo) => arquivo.backups, { nullable: false, onDelete: "CASCADE" })
     @JoinColumn({ name: "arquivo_id" })
-    arquivo: Arquivo
+    arquivo: Relation<Arquivo>
 
 }
