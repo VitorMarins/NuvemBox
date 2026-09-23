@@ -21,7 +21,7 @@ export class Arquivo {
     mimetype: string
 
     @Column({ type: "bigint" })
-    tamanho: number
+    tamanho: string
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     criado_em: Date
