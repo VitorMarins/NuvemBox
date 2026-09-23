@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Relation } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, type Relation } from "typeorm"
 import { Usuario } from "./usuario.js"
 import { Arquivo } from "./arquivo.js"
 
