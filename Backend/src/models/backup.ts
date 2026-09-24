@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, type Relation } from "typeorm"
+import { Entity, CreateDateColumn, PrimaryGeneratedColumn, ManyToOne, JoinColumn, type Relation } from "typeorm"
 import { Usuario } from "./usuario.js"
 import { Arquivo } from "./arquivo.js"
 
@@ -7,7 +7,7 @@ export class Backup {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    @CreateDateColumn({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
     criado_em: Date
 
     @ManyToOne(() => Arquivo, (arquivo) => arquivo.backups, { nullable: false, onDelete: "CASCADE" })
