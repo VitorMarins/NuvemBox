@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, type Relation } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, type Relation } from "typeorm"
 import { Arquivo } from "./arquivo.js"
 
 @Entity()
@@ -19,10 +19,10 @@ export class Usuario {
     @Column({ type: "boolean" })
     esta_ativo: boolean
 
-    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
     data_criacao: Date
     
-    @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
     data_atualizacao: Date
 
     @OneToMany(() => Arquivo, (arquivo) => arquivo.usuario)
