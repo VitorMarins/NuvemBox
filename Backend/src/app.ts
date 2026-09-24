@@ -1,6 +1,5 @@
 import express from "express";
 import type { Application } from "express";
-
 import { AppDataSource } from "./db/data-source.js";
 
 export class App {
