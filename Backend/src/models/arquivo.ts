@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, type Relation } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn, type Relation } from "typeorm"
 import { Usuario } from "./usuario.js"
 import { Backup } from "./backup.js"
 
@@ -23,8 +23,11 @@ export class Arquivo {
     @Column({ type: "bigint" })
     tamanho: string
 
-    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    @CreateDateColumn({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
     criado_em: Date
+
+    @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+    alterado_em: Date
 
     @Column("boolean", { default: false })
     esta_na_lixeira: boolean
