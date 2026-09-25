@@ -53,3 +53,5 @@ class UsuarioRepository {
     }
 
 }
+
+export default new UsuarioRepository()
