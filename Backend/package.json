@@ -16,13 +16,14 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "12.4.1",
+      "version": "12.6.0",
       "onFail": "download"
     }
   },
-  "packageManager": "pnpm@12.4.1",
+  "packageManager": "pnpm@12.6.0",
   "type": "module",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dotenv": "^18.0.0",
     "express": "^5.2.1",
     "multer": "^2.3.0",
