@@ -18,12 +18,10 @@ export default class UsuarioController {
       const usuarios = await UsuarioRepository.retrieveAll();
       res.status(200).send(usuarios);
     } catch (error: unknown) {
-      res
-        .status(500)
-        .send({
-          message:
-            "Erro encontrado quando estava se fazendo a busca por todos os usuarios.",
-        });
+      res.status(500).send({
+        message:
+          "Erro encontrado quando estava se fazendo a busca por todos os usuarios.",
+      });
     }
   }
 
@@ -33,20 +31,32 @@ export default class UsuarioController {
       const usuario = await UsuarioRepository.retrieveById(id);
       if (usuario) res.status(200).send(usuario);
       else
-        res
-          .status(404)
-          .send({
-            message: `Não foi encontrado nenhum usuario com esse id=${id}.`,
-          });
-    } catch (error: unknown) {
-      res
-        .status(500)
-        .send({
-          message: `Error não foi possível retornar o Usuario com id=${id}.`,
+        res.status(404).send({
+          message: `Não foi encontrado nenhum usuario com esse id=${id}.`,
         });
+    } catch (error: unknown) {
+      res.status(500).send({
+        message: `Error não foi possível retornar o Usuario com id=${id}.`,
+      });
     }
   }
 
+  async findName(req: Request, res: Response) {
+    const nome: string = req.params.nome;
+
+    try {
+      const usuario = await usuarioRepository.retrieveByNome(nome);
+      if (usuario) res.status(200).send(usuario);
+      else
+        res.status(404).send({
+          message: `Não foi encontrado nenhum usuário com esse nome=${nome}.`,
+        });
+    } catch (err) {
+      res.status(500).send({
+        message: `Error não foi possível retornar o Usuário com nome=${nome}.`,
+      });
+    }
+  }
   async update(req: Request, res: Response) {
     let usuario: Usuario = req.body;
     usuario.id = String(req.params.id);
