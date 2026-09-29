@@ -56,7 +56,7 @@ export default class UsuarioController {
       });
     }
   }
-  
+
   async update(req: Request, res: Response) {
     let usuario: Usuario = req.body;
     usuario.id = String(req.params.id);
