@@ -12,7 +12,7 @@ export class App {
 
   public async Start(port: number) {
     try {
-      await AppDataSource.initialize()
+      await AppDataSource.initialize();
     } catch (error) {
       console.error("Erro ao conectar ao banco de dados:", error);
     }
