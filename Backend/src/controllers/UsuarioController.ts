@@ -42,10 +42,9 @@ export default class UsuarioController {
   }
 
   async findName(req: Request, res: Response) {
-    const nome: string = req.params.nome;
-
+    const nome: string = String(req.params.nome);
     try {
-      const usuario = await usuarioRepository.retrieveByNome(nome);
+      const usuario = await UsuarioRepository.retrieveByNome(nome);
       if (usuario) res.status(200).send(usuario);
       else
         res.status(404).send({
@@ -57,6 +56,7 @@ export default class UsuarioController {
       });
     }
   }
+  
   async update(req: Request, res: Response) {
     let usuario: Usuario = req.body;
     usuario.id = String(req.params.id);
