@@ -1,6 +1,7 @@
 import express from "express";
 import type { Application } from "express";
 import { AppDataSource } from "./db/data-source.js";
+import Routes from "./routes/Routes.js";
 
 export class App {
   app: Application;
@@ -8,6 +9,8 @@ export class App {
   constructor() {
     this.app = express();
     this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+    new Routes(this.app); 
   }
 
   public async Start(port: number) {
