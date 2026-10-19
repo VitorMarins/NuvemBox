@@ -2,7 +2,7 @@ import { AppDataSource } from "../db/data-source.js";
 import { Usuario } from "../models/usuario.js";
 
 class UsuarioRepository {
-  usuarioRepository = AppDataSource.getRepository(Usuario);
+  private usuarioRepository = AppDataSource.getRepository(Usuario);
 
   async save(usuario: Usuario): Promise<Usuario> {
     try {
@@ -24,9 +24,7 @@ class UsuarioRepository {
 
   async retrieveById(usuarioID: string): Promise<Usuario | null> {
     try {
-      return await this.usuarioRepository.findOneBy({
-        id: usuarioID,
-      });
+      return await this.usuarioRepository.findOneBy({ id: usuarioID });
     } catch (error: unknown) {
       throw new Error(
         "Falha ao retornar o usuário: " + (error as Error).message,
@@ -36,9 +34,7 @@ class UsuarioRepository {
 
   async retrieveByNome(nome: string): Promise<Usuario | null> {
     try {
-      return await this.usuarioRepository.findOneBy({
-        nome: nome,
-      });
+      return await this.usuarioRepository.findOneBy({ nome });
     } catch (error: unknown) {
       throw new Error(
         "Falha ao retornar o usuário pelo nome: " + (error as Error).message,
@@ -46,8 +42,7 @@ class UsuarioRepository {
     }
   }
 
-  async update(usuario: Usuario) {
-    const { nome, email, senha, esta_ativo } = usuario;
+  async update(usuario: Usuario): Promise<Usuario> {
     try {
       return await this.usuarioRepository.save(usuario);
     } catch (error: unknown) {
@@ -57,14 +52,10 @@ class UsuarioRepository {
     }
   }
 
-  async delete(usuarioID: string): Promise<String> {
+  async delete(usuarioID: string): Promise<boolean> {
     try {
-      const usuario = await this.usuarioRepository.findOneBy({ id: usuarioID });
-      if (!usuario) {
-        return "Usuário não encontrado";
-      }
-      await this.usuarioRepository.remove(usuario);
-      return "Usuário deletado";
+      const result = await this.usuarioRepository.delete(usuarioID);
+      return result.affected ? result.affected > 0 : false;
     } catch (error: unknown) {
       throw new Error("Falha ao apagar o usuário: " + (error as Error).message);
     }
