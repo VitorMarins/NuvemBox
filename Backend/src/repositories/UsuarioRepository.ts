@@ -42,9 +42,10 @@ class UsuarioRepository {
     }
   }
 
-  async update(usuario: Usuario): Promise<Usuario> {
+  async update(usuario: Usuario): Promise<void> {
+    const { id, ...updateData } = usuario;
     try {
-      return await this.usuarioRepository.save(usuario);
+      await this.usuarioRepository.update(id, updateData);
     } catch (error: unknown) {
       throw new Error(
         "Falha ao alterar o usuário: " + (error as Error).message,
@@ -52,10 +53,15 @@ class UsuarioRepository {
     }
   }
 
-  async delete(usuarioID: string): Promise<boolean> {
+  async delete(usuarioID: string): Promise<string> {
     try {
       const result = await this.usuarioRepository.delete(usuarioID);
-      return result.affected ? result.affected > 0 : false;
+
+      if (result.affected === 0) {
+        return "Usuário não encontrado.";
+      }
+
+      return "Usuário deletado com sucesso.";
     } catch (error: unknown) {
       throw new Error("Falha ao apagar o usuário: " + (error as Error).message);
     }
