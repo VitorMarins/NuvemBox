@@ -3,11 +3,7 @@ import UsuarioRepository from "../repositories/UsuarioRepository.js";
 import { hashPassword } from "../utils/password.js";
 
 class UsuarioService {
-  private usuarioRepository: typeof UsuarioRepository;
-
-  constructor() {
-    this.usuarioRepository = UsuarioRepository;
-  }
+  private usuarioRepository = UsuarioRepository;
 
   async create(userData: Usuario): Promise<Usuario> {
     const hashedPassword = await hashPassword(userData.senha);
@@ -27,11 +23,15 @@ class UsuarioService {
     return await this.usuarioRepository.retrieveByNome(nome);
   }
 
-  async update(usuario: Usuario): Promise<Usuario> {
+  async update(usuario: Usuario): Promise<void> {
+    // Opcional: Se a senha foi alterada no objeto, refazer o hash
+    if (usuario.senha) {
+      usuario.senha = await hashPassword(usuario.senha);
+    }
     return await this.usuarioRepository.update(usuario);
   }
 
-  async delete(id: string): Promise<String> {
+  async delete(id: string): Promise<string> {
     return await this.usuarioRepository.delete(id);
   }
 }
