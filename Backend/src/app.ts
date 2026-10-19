@@ -10,7 +10,7 @@ export class App {
     this.app = express();
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    new Routes(this.app); 
+    new Routes(this.app);
   }
 
   public async Start(port: number) {
