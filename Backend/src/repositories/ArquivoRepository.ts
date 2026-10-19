@@ -2,7 +2,7 @@ import { AppDataSource } from "../db/data-source.js";
 import { Arquivo } from "../models/arquivo.js";
 
 class ArquivoRepository {
-  arquivoRepository = AppDataSource.getRepository(Arquivo);
+  private arquivoRepository = AppDataSource.getRepository(Arquivo);
 
   async save(arquivo: Arquivo): Promise<Arquivo> {
     try {
@@ -24,9 +24,7 @@ class ArquivoRepository {
 
   async retrieveById(arquivoID: string): Promise<Arquivo | null> {
     try {
-      return await this.arquivoRepository.findOneBy({
-        id: arquivoID,
-      });
+      return await this.arquivoRepository.findOneBy({ id: arquivoID });
     } catch (error: unknown) {
       throw new Error(
         "Falha ao retornar o arquivo: " + (error as Error).message,
@@ -34,7 +32,7 @@ class ArquivoRepository {
     }
   }
 
-  async update(arquivo: Arquivo) {
+  async update(arquivo: Arquivo): Promise<void> {
     const { id, ...updateData } = arquivo;
     try {
       await this.arquivoRepository.update(id, updateData);
@@ -45,9 +43,14 @@ class ArquivoRepository {
     }
   }
 
-  async delete(arquivoID: string): Promise<String> {
+  async delete(arquivoID: string): Promise<string> {
     try {
-      await this.arquivoRepository.delete(arquivoID);
+      const result = await this.arquivoRepository.delete(arquivoID);
+      
+      if (result.affected === 0) {
+        return "Arquivo não encontrado.";
+      }
+      
       return "Arquivo excluído com sucesso.";
     } catch (error: unknown) {
       throw new Error("Erro ao excluir o arquivo: " + (error as Error).message);
