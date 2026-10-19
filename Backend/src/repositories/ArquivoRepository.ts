@@ -46,11 +46,11 @@ class ArquivoRepository {
   async delete(arquivoID: string): Promise<string> {
     try {
       const result = await this.arquivoRepository.delete(arquivoID);
-      
+
       if (result.affected === 0) {
         return "Arquivo não encontrado.";
       }
-      
+
       return "Arquivo excluído com sucesso.";
     } catch (error: unknown) {
       throw new Error("Erro ao excluir o arquivo: " + (error as Error).message);
