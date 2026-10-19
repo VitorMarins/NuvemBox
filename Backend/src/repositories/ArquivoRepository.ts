@@ -39,7 +39,9 @@ class ArquivoRepository {
     try {
       await this.arquivoRepository.update(id, updateData);
     } catch (error: unknown) {
-      throw new Error("Erro ao atualizar o arquivo: " + (error as Error).message);
+      throw new Error(
+        "Erro ao atualizar o arquivo: " + (error as Error).message,
+      );
     }
   }
 
