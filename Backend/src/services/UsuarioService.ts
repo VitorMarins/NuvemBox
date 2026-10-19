@@ -24,7 +24,6 @@ class UsuarioService {
   }
 
   async update(usuario: Usuario): Promise<void> {
-    // Opcional: Se a senha foi alterada no objeto, refazer o hash
     if (usuario.senha) {
       usuario.senha = await hashPassword(usuario.senha);
     }
