@@ -24,9 +24,18 @@ class UsuarioService {
   }
 
   async update(usuario: Usuario): Promise<void> {
-    if (usuario.senha) {
-      usuario.senha = await hashPassword(usuario.senha);
+    const usuarioAtual = await this.usuarioRepository.retrieveById(usuario.id);
+
+    if (!usuarioAtual) {
+      throw new Error("Usuário não encontrado.");
     }
+
+    if (usuario.senha && usuario.senha !== usuarioAtual.senha) {
+      usuario.senha = await hashPassword(usuario.senha);
+    } else {
+      usuario.senha = usuarioAtual.senha;
+    }
+
     return await this.usuarioRepository.update(usuario);
   }
 
