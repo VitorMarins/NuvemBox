@@ -1,5 +1,6 @@
 import { Usuario } from "../models/usuario.js";
 import UsuarioRepository from "../repositories/UsuarioRepository.js";
+import { hashPassword } from "../utils/password.js";
 
 class UsuarioService {
   private usuarioRepository: typeof UsuarioRepository;
@@ -8,8 +9,10 @@ class UsuarioService {
     this.usuarioRepository = UsuarioRepository;
   }
 
-  async create(usuario: Usuario): Promise<Usuario> {
-    return await this.usuarioRepository.save(usuario);
+  async create(userData: Usuario): Promise<Usuario> {
+    const hashedPassword = await hashPassword(userData.senha);
+    const userFinalData = { ...userData, senha: hashedPassword };
+    return await this.usuarioRepository.save(userFinalData);
   }
 
   async findAll(): Promise<Usuario[]> {
