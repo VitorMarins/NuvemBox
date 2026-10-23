@@ -1,9 +1,12 @@
 import { Router } from "express";
+import multer from "multer";
+import { multerConfig } from "../config/multer.js";
 import ArquivoController from "../controllers/ArquivoController.js";
 
 class ArquivoRoutes {
   router: Router;
   controller = new ArquivoController();
+  upload = multer(multerConfig);
 
   constructor() {
     this.router = Router();
@@ -11,7 +14,7 @@ class ArquivoRoutes {
   }
 
   routes() {
-    this.router.post("/", this.controller.create);
+    this.router.post("/", this.upload.single("file"), this.controller.create);
     this.router.get("/", this.controller.findAll);
     this.router.get("/:id", this.controller.findOne);
     // this.router.get("/nome/:nome", this.controller.findName);

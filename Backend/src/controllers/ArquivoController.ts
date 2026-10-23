@@ -1,15 +1,33 @@
 import type { Request, Response } from "express";
-import type { Arquivo } from "../models/arquivo.js";
+import { Arquivo } from "../models/arquivo.js";
 import ArquivoService from "../services/ArquivoService.js";
 
 export default class ArquivoController {
   async create(req: Request, res: Response) {
     try {
-      const arquivo: Arquivo = req.body;
-      const savedArquivo = await ArquivoService.create(arquivo);
+      if (!req.file) {
+        return res.status(400).send({ message: "Nenhum arquivo enviado." });
+      }
+
+      const { originalname, filename, path: filePath, mimetype, size } = req.file;
+
+      const novoArquivo = new Arquivo();
+      novoArquivo.nome_original = originalname;
+      novoArquivo.nome_alterado = filename;
+      novoArquivo.caminho = filePath;
+      novoArquivo.mimetype = mimetype;
+      novoArquivo.tamanho = String(size);
+      novoArquivo.esta_na_lixeira = false;
+
+      // Se você estiver enviando o usuario_id junto no FormData:
+      if (req.body.usuario_id) {
+        novoArquivo.usuario = req.body.usuario_id;
+      }
+
+      const savedArquivo = await ArquivoService.create(novoArquivo);
       res.status(201).send(savedArquivo);
     } catch (error: unknown) {
-      res.status(500).send({ message: "Erro ao tentar criar um arquivo." });
+      res.status(500).send({ message: "Erro ao tentar salvar o arquivo: " + (error as Error).message });
     }
   }
 
