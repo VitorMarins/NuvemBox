@@ -6,7 +6,7 @@ import {
   JoinColumn,
   type Relation,
 } from "typeorm";
-import { Usuario } from "./usuario.js";
+// import { Usuario } from "./usuario.js";
 import { Arquivo } from "./arquivo.js";
 
 @Entity()
