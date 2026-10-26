@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { Arquivo } from "../models/arquivo.js";
 import ArquivoService from "../services/ArquivoService.js";
+import fs from "node:fs";
 
 export default class ArquivoController {
   async create(req: Request, res: Response) {
@@ -9,7 +10,13 @@ export default class ArquivoController {
         return res.status(400).send({ message: "Nenhum arquivo enviado." });
       }
 
-      const { originalname, filename, path: filePath, mimetype, size } = req.file;
+      const {
+        originalname,
+        filename,
+        path: filePath,
+        mimetype,
+        size,
+      } = req.file;
 
       const novoArquivo = new Arquivo();
       novoArquivo.nome_original = originalname;
@@ -19,7 +26,6 @@ export default class ArquivoController {
       novoArquivo.tamanho = String(size);
       novoArquivo.esta_na_lixeira = false;
 
-      // Se você estiver enviando o usuario_id junto no FormData:
       if (req.body.usuario_id) {
         novoArquivo.usuario = req.body.usuario_id;
       }
@@ -27,7 +33,9 @@ export default class ArquivoController {
       const savedArquivo = await ArquivoService.create(novoArquivo);
       res.status(201).send(savedArquivo);
     } catch (error: unknown) {
-      res.status(500).send({ message: "Erro ao tentar salvar o arquivo: " + (error as Error).message });
+      res.status(500).send({
+        message: "Erro ao tentar salvar o arquivo: " + (error as Error).message,
+      });
     }
   }
 
@@ -36,10 +44,7 @@ export default class ArquivoController {
       const arquivos = await ArquivoService.findAll();
       res.status(200).send(arquivos);
     } catch (error: unknown) {
-      res.status(500).send({
-        message:
-          "Erro encontrado quando estava se fazendo a busca por todos os arquivos.",
-      });
+      res.status(500).send({ message: "Erro ao buscar todos os arquivos." });
     }
   }
 
@@ -50,30 +55,86 @@ export default class ArquivoController {
       if (arquivo) {
         res.status(200).send(arquivo);
       } else {
-        res.status(404).send({
-          message: `Não foi encontrado nenhum arquivo com esse id=${id}.`,
-        });
+        res
+          .status(404)
+          .send({ message: `Arquivo com id=${id} não encontrado.` });
       }
     } catch (error: unknown) {
-      res.status(500).send({
-        message: `Erro: não foi possível retornar o arquivo com id=${id}.`,
-      });
+      res
+        .status(500)
+        .send({ message: `Erro ao retornar o arquivo com id=${id}.` });
     }
   }
 
+  // NOVA VERSÃO DO UPDATE: Substitui o arquivo físico e atualiza no banco
   async update(req: Request, res: Response) {
-    let arquivo: Arquivo = req.body;
-    arquivo.id = String(req.params.id);
+    const id: string = String(req.params.id);
     try {
-      await ArquivoService.update(arquivo);
-      res.send({
-        message: `Arquivo atualizado com sucesso!`,
+      const arquivoAntigo = await ArquivoService.findOne(id);
+      if (!arquivoAntigo) {
+        // Se mandou um arquivo novo mas o registro não existe, limpa o arquivo enviado do disco
+        if (req.file && fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+        return res.status(404).send({ message: "Arquivo não encontrado." });
+      }
+
+      // Se um novo arquivo foi enviado via Multer, substituímos o físico
+      if (req.file) {
+        // 1. Apaga o arquivo físico antigo do disco
+        if (fs.existsSync(arquivoAntigo.caminho)) {
+          fs.unlinkSync(arquivoAntigo.caminho);
+        }
+
+        // 2. Atualiza os dados físicos com o novo arquivo
+        arquivoAntigo.nome_original = req.file.originalname;
+        arquivoAntigo.nome_alterado = req.file.filename;
+        arquivoAntigo.caminho = req.file.path;
+        arquivoAntigo.mimetype = req.file.mimetype;
+        arquivoAntigo.tamanho = String(req.file.size);
+      }
+
+      // Se o usuário mandou apenas alterar propriedades textuais (ex: renomear o nome_original ou lixeira) sem enviar arquivo novo
+      if (req.body.nome_original) {
+        arquivoAntigo.nome_original = req.body.nome_original;
+      }
+      if (req.body.esta_na_lixeira !== undefined) {
+        arquivoAntigo.esta_na_lixeira =
+          req.body.esta_na_lixeira === "true" ||
+          req.body.esta_na_lixeira === true;
+      }
+
+      await ArquivoService.update(arquivoAntigo);
+      res.status(200).send({
+        message: "Arquivo atualizado com sucesso!",
+        arquivo: arquivoAntigo,
       });
     } catch (err: any) {
-      const statusCode = err.message === "Arquivo não encontrado." ? 404 : 500;
-      res.status(statusCode).send({
-        message: err.message || `Erro ao atualizar o arquivo com id=${arquivo.id}.`,
-      });
+      res
+        .status(500)
+        .send({ message: "Erro ao atualizar o arquivo: " + err.message });
+    }
+  }
+
+  async download(req: Request, res: Response) {
+    const id: string = String(req.params.id);
+    try {
+      const arquivo = await ArquivoService.findOne(id);
+      if (!arquivo) {
+        return res
+          .status(404)
+          .send({ message: "Arquivo não encontrado no banco de dados." });
+      }
+
+      if (!fs.existsSync(arquivo.caminho)) {
+        return res
+          .status(404)
+          .send({ message: "Arquivo físico não encontrado no servidor." });
+      }
+
+      res.download(arquivo.caminho, arquivo.nome_original);
+    } catch (error: unknown) {
+      res.status(500).send({ message: "Erro ao realizar o download." });
     }
   }
 
@@ -81,21 +142,17 @@ export default class ArquivoController {
     const id: string = String(req.params.id);
 
     try {
-      const resultado = await ArquivoService.delete(id);
-
-      if (resultado === "Arquivo excluído com sucesso.") {
-        res.send({
-          message: resultado,
-        });
-      } else {
-        res.status(404).send({
-          message: resultado,
-        });
+      const arquivo = await ArquivoService.findOne(id);
+      if (arquivo && fs.existsSync(arquivo.caminho)) {
+        fs.unlinkSync(arquivo.caminho); // Apaga o arquivo físico
       }
+
+      const resultado = await ArquivoService.delete(id);
+      res.send({ message: resultado });
     } catch (err) {
-      res.status(500).send({
-        message: `O arquivo com id=${id} não pôde ser deletado.`,
-      });
+      res
+        .status(500)
+        .send({ message: `O arquivo com id=${id} não pôde ser deletado.` });
     }
   }
 }

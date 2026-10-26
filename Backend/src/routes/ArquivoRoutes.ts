@@ -18,7 +18,11 @@ class ArquivoRoutes {
     this.router.get("/", this.controller.findAll);
     this.router.get("/:id", this.controller.findOne);
     // this.router.get("/nome/:nome", this.controller.findName);
-    this.router.put("/:id", this.controller.update);
+    this.router.put(
+      "/arquivos/:id",
+      this.upload.single("arquivo"),
+      this.controller.update,
+    );
     this.router.delete("/:id", this.controller.delete);
   }
 }
