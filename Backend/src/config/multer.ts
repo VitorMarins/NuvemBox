@@ -1,8 +1,23 @@
 import multer from "multer";
 import path from "node:path";
-import crypto from "node:crypto";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 
-const uploadFolder = path.resolve(__dirname, "..", "..", "uploads");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Aponta para a pasta física 'meu-drive/meu-drive' a partir da raiz
+const uploadFolder = path.resolve(
+  __dirname,
+  "..",
+  "..",
+  "meu-drive",
+  "meu-drive",
+);
+
+if (!fs.existsSync(uploadFolder)) {
+  fs.mkdirSync(uploadFolder, { recursive: true });
+}
 
 export const multerConfig = {
   directory: uploadFolder,
@@ -11,9 +26,8 @@ export const multerConfig = {
       callback(null, uploadFolder);
     },
     filename: (req, file, callback) => {
-      const fileHash = crypto.randomBytes(10).toString("hex");
-      const fileName = `${fileHash}-${file.originalname}`;
-      callback(null, fileName);
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      callback(null, `${uniqueSuffix}-${file.originalname}`);
     },
   }),
 };

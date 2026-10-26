@@ -16,9 +16,9 @@ class ArquivoService {
     return await this.arquivoRepository.retrieveById(id);
   }
 
-//   async findName(nome: string): Promise<Arquivo | null> {
-//     return await this.arquivoRepository.retrieveByNome(nome);
-//   }
+  //   async findName(nome: string): Promise<Arquivo | null> {
+  //     return await this.arquivoRepository.retrieveByNome(nome);
+  //   }
 
   async update(arquivo: Arquivo): Promise<void> {
     const arquivoAtual = await this.arquivoRepository.retrieveById(arquivo.id);
