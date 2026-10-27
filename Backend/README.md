@@ -15,7 +15,7 @@ API do NuvemBox para gerenciamento de usuários, arquivos e backups.
 
 - Node.js instalado
 - pnpm instalado
-- Banco de dados configurado
+- Banco de dados PostgreSQL configurado
 
 ## Instalação
 

@@ -66,27 +66,22 @@ export default class ArquivoController {
     }
   }
 
-  // NOVA VERSÃO DO UPDATE: Substitui o arquivo físico e atualiza no banco
   async update(req: Request, res: Response) {
     const id: string = String(req.params.id);
     try {
       const arquivoAntigo = await ArquivoService.findOne(id);
       if (!arquivoAntigo) {
-        // Se mandou um arquivo novo mas o registro não existe, limpa o arquivo enviado do disco
         if (req.file && fs.existsSync(req.file.path)) {
           fs.unlinkSync(req.file.path);
         }
         return res.status(404).send({ message: "Arquivo não encontrado." });
       }
 
-      // Se um novo arquivo foi enviado via Multer, substituímos o físico
       if (req.file) {
-        // 1. Apaga o arquivo físico antigo do disco
         if (fs.existsSync(arquivoAntigo.caminho)) {
           fs.unlinkSync(arquivoAntigo.caminho);
         }
 
-        // 2. Atualiza os dados físicos com o novo arquivo
         arquivoAntigo.nome_original = req.file.originalname;
         arquivoAntigo.nome_alterado = req.file.filename;
         arquivoAntigo.caminho = req.file.path;
@@ -94,7 +89,6 @@ export default class ArquivoController {
         arquivoAntigo.tamanho = String(req.file.size);
       }
 
-      // Se o usuário mandou apenas alterar propriedades textuais (ex: renomear o nome_original ou lixeira) sem enviar arquivo novo
       if (req.body.nome_original) {
         arquivoAntigo.nome_original = req.body.nome_original;
       }
