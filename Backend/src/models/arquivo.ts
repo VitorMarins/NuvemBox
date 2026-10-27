@@ -17,10 +17,10 @@ export class Arquivo {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column({ type: "varchar", length: 30 })
+  @Column({ type: "varchar", length: 255 })
   nome_original: string;
 
-  @Column({ type: "varchar", length: 30 })
+  @Column({ type: "varchar", length: 255 })
   nome_alterado: string;
 
   @Column("text")
