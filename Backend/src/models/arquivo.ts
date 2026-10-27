@@ -46,7 +46,7 @@ export class Arquivo {
   esta_na_lixeira: boolean;
 
   @ManyToOne(() => Usuario, (usuario) => usuario.arquivos, {
-    nullable: true,
+    // nullable: true,
     onDelete: "SET NULL",
   })
   @JoinColumn({ name: "usuario_id" })
