@@ -144,3 +144,6 @@ vite.config.ts.timestamp-*
 
 # local storage 
 meu-drive
+
+teste.pdf
+testes-drive.http
