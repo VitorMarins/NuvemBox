@@ -11,7 +11,7 @@ const uploadFolder = path.resolve(
   __dirname,
   "..",
   "..",
-  "meu-drive",
+  "drive",
   "meu-drive",
 );
 
