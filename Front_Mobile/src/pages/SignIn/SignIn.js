@@ -6,9 +6,16 @@ import {
   TouchableOpacity
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { useNavigation } from '@react-navigation/native';
 import styles from './SignInStyles';
 
 export default function SignIn() {
+  const navigation = useNavigation();
+
+  const handleSignIn = async () => {
+    // Lógica de autenticação aqui
+    navigation.navigate('Dashboard');
+  }
   return (
     <View style={styles.container}>
       <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
@@ -29,7 +36,7 @@ export default function SignIn() {
           secureTextEntry={true}
         />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
           <Text style={styles.buttonText}>Acessar</Text>
         </TouchableOpacity>
 
