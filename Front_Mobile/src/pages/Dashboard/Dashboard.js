@@ -1,8 +1,7 @@
 import React from 'react';
 import { 
   View, 
-  Text, 
-  TextInput,
+  Text,
   TouchableOpacity
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
@@ -16,8 +15,18 @@ export default function Dashboard() {
         <Navbar />
         <Text style={styles.message}>Home</Text>
       </Animatable.View>
-      <Animatable.View animation="fadeInUp" style={styles.containerMain}>
+      <Animatable.View animation="fadeInUp" style={styles.containerUsed}>
+        <TouchableOpacity style={styles.buttonTranparent} onPress={() => { console.log('Files pressed') }}>
+          <Text style={styles.buttonText}>Files</Text>
+        </TouchableOpacity>
 
+        <TouchableOpacity style={[styles.buttonTranparent, { marginLeft: '0%' }]} onPress={() => { console.log('Favorites pressed') }}>
+          <Text style={styles.buttonText}>Favorites</Text>
+        </TouchableOpacity>
+
+      </Animatable.View>
+      <Animatable.View animation="fadeInUp" style={styles.containerMain}>
+        
       </Animatable.View>
     </View>
   );
