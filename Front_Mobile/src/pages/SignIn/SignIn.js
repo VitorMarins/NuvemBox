@@ -8,12 +8,17 @@ import {
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import styles from './SignInStyles';
+import { AuthContext } from '../../context/AuthContext';
 
 export default function SignIn() {
   const navigation = useNavigation();
+  const { login } = React.useContext(AuthContext);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
   const handleSignIn = async () => {
     // Lógica de autenticação aqui
+    await login('user@example.com', 'password123');
     navigation.navigate('Dashboard');
   }
   return (
@@ -27,6 +32,8 @@ export default function SignIn() {
         <TextInput 
           placeholder="Digite um email..."
           style={styles.input}
+          value={email}
+          onChangeText={setEmail}
         />
 
         <Text style={styles.title}>Senha</Text>
@@ -34,6 +41,8 @@ export default function SignIn() {
           placeholder="Sua senha"
           style={styles.input}
           secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleSignIn}>
