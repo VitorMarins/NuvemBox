@@ -15,7 +15,7 @@ class AuthService {
 
         const now = Math.floor(Date.now() / 1000);
         const expiresIn = 60 * 60;
-        const accessToken = await new SignJWT({})
+        const accessToken = await new SignJWT({ usuarioId: usuario.id })
             .setProtectedHeader({ alg: "HS256", typ: "JWT" })
             .setSubject(usuario.id)
             .setIssuer("NuvemBox")
