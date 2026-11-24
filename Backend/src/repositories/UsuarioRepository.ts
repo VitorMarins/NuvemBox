@@ -32,6 +32,17 @@ class UsuarioRepository {
     }
   }
 
+  async retrieveByEmail(email: string): Promise<Usuario | null> {
+    try {
+      const emailNormalizado = email.trim().toLowerCase();
+      return await this.usuarioRepository.findOneBy({ email: emailNormalizado });
+    } catch (error: unknown) {
+      throw new Error(
+        "Falha ao retornar o usuário pelo email: " + (error as Error).message,
+      );
+    }
+  }
+
   async retrieveByNome(nome: string): Promise<Usuario | null> {
     try {
       return await this.usuarioRepository.findOneBy({ nome });
