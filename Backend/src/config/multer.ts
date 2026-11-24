@@ -7,13 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Aponta para a pasta física 'meu-drive/meu-drive' a partir da raiz
-const uploadFolder = path.resolve(
-  __dirname,
-  "..",
-  "..",
-  "drive",
-  "meu-drive",
-);
+const uploadFolder = path.resolve(__dirname, "..", "..", "drive", "meu-drive");
 
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder, { recursive: true });
