@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { 
   View, 
   Text, 
@@ -12,13 +12,13 @@ import { AuthContext } from '../../context/AuthContext';
 
 export default function SignIn() {
   const navigation = useNavigation();
-  const { login } = React.useContext(AuthContext);
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const { login } = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSignIn = async () => {
     // Lógica de autenticação aqui
-    await login('user@example.com', 'password123');
+    await login(email, password);
     navigation.navigate('Dashboard');
   }
   return (
